@@ -7,8 +7,8 @@
 #
 ################################################################################
 # \copyright
-# Copyright (c) 2022-2025 Cypress Semiconductor Corporation (an Infineon company)
-# or an affiliate of Cypress Semiconductor Corporation. All rights reserved.
+# (c) 2022-2026, Infineon Technologies AG, or an affiliate of Infineon
+# Technologies AG. All rights reserved.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -92,6 +92,16 @@ ifeq ($(TFM_PYTHON_PATH),)
 TFM_PYTHON_PATH=$(TFM_PYTHON_EXECUTABLE_NAME)
 endif
 endif
+
+# Pass Python path to CMake for find_package(Python3).
+# TFM_PATH_MIXED converts the interpreter path to a native (mixed) format so the
+# native CMake can run it. Without this, a Cygwin "/cygdrive/c/..." path is
+# passed to the Windows CMake, which cannot run it and fails find_package(Python3)
+# with "Cannot run the interpreter". On non-Windows hosts TFM_PATH_MIXED is a
+# no-op.
+# The value is quoted so paths containing spaces (e.g. "C:/Program Files/...")
+# are passed to CMake as a single argument instead of being split.
+TFM_CONFIGURE_OPTIONS+= "-DPython3_EXECUTABLE:FILEPATH=$(call TFM_PATH_MIXED,$(TFM_PYTHON_PATH))"
 
 ################################################################################
 # Configuration
