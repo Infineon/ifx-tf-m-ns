@@ -7,6 +7,14 @@ with the PSA Certified guidelines. Thus, TF-M allows relevant chips and devices 
 
 ## Changelog
 
+### v2.3.300
+* Add support for PSC3P6/PSC3M6 devices.
+* Restructured TF-M libraries for better modularity:
+    * **ifx-tf-m** - Unified library containing TF-M source code (src/ directory), common for all platforms
+    * **ifx-tf-m-port** - Platform-specific configurations, linker scripts, and build files
+    * This replaces the previous platform-specific libraries (ifx-tf-m-pse84epc2, ifx-tf-m-pse84epc4, etc.)
+* Updated TF-M to released TF-M version 2.3.0
+
 ### v2.1.600
 * Updated version per dependent assets update.
 * Removed automatic Python virtual environment creation and Python module installation from TF-M
@@ -60,7 +68,7 @@ Use the following links for more information, as needed:
 * [Cypress Semiconductor Corporation (an Infineon company) GitHub](https://github.com/Infineon)
 * [Trusted Firmware website](https://www.trustedfirmware.org)
 * [TF-M project](https://www.trustedfirmware.org/projects/tf-m)
-* [PSA API](https://github.com/ARM-software/psa-arch-tests/tree/master/api-specs)
+* [PSA API](https://arm-software.github.io/psa-api)
 * [ModusToolbox Software Environment, Quick Start Guide, Documentation, and Videos](https://www.infineon.com/cms/en/design-support/tools/sdk/modustoolbox-software)
 
 ---

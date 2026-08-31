@@ -1,7 +1,15 @@
 ################################################################################
+# \file PSE84.mk
+# \version 1.0
+#
+# \brief
+# Trusted Firmware-M (TF-M) configuration for PSE84 Family
+#
+################################################################################
 # \copyright
 # (c) 2023-2026, Infineon Technologies AG, or an affiliate of Infineon
 # Technologies AG. All rights reserved.
+#
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,29 +24,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ################################################################################
+
 ifeq ($(WHICHFILE),true)
 $(info Processing $(lastword $(MAKEFILE_LIST)))
 endif
 
-ifndef DEVICE_MODE
-# SECURE/NON_SECURE mode is provided by VCORE_ATTRS instead of DEVICE_MODE
-DEVICE_MODE=$(VCORE_ATTRS)
-endif
-
 ################################################################################
-# Validate build
+# Secure build
 ################################################################################
 ifeq ($(DEVICE_MODE),SECURE)
-# This library is for non-secure project only
-ifneq ($(filter build_proj,$(MAKECMDGOALS)),)
-$(error Please use ifx-tf-m library instead of ifx-tf-m-ns for secure project)
-else
-$(warning Please use ifx-tf-m library instead of ifx-tf-m-ns for secure project)
-endif
-endif
-
+else # ($(DEVICE_MODE),SECURE)
 ################################################################################
 # Non-secure build
 ################################################################################
-# TF-M non-secure Makefile
-include $(abspath $(join $(dir $(lastword $(MAKEFILE_LIST))),/make/tfm_ns.mk))
+
+ifeq ($(CORE),CM33) # CM33
+# Use TZ interface for CM33
+IFX_NS_INTERFACE_TZ=1
+else ifeq ($(CORE),CM55) # CM55
+# Use MAILBOX interface for CM55
+IFX_NS_INTERFACE_MAILBOX=1
+endif # ($(CORE),CM33)
+
+INCLUDES+=$(wildcard $(TFM_INSTALL_PATH)/platform/pse84/shared/device/include)
+
+endif # ($(DEVICE_MODE),SECURE)
