@@ -30,7 +30,11 @@ $(info Processing $(lastword $(MAKEFILE_LIST)))
 endif
 
 # Makefile with common macros
-include $(join $(dir $(lastword $(MAKEFILE_LIST))),common.mk)
+IFX_COMMON_MK:=$(join $(dir $(lastword $(MAKEFILE_LIST))),common.mk)
+ifeq ($(wildcard $(IFX_COMMON_MK)),)
+$(error Required makefile not found: $(IFX_COMMON_MK))
+endif
+include $(IFX_COMMON_MK)
 
 
 ################################################################################

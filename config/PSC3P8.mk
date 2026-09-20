@@ -1,7 +1,15 @@
 ################################################################################
+# \file PSC3P8.mk
+# \version 1.0
+#
+# \brief
+# Trusted Firmware-M (TF-M) configuration for PSC3P8 Family
+#
+################################################################################
 # \copyright
 # (c) 2023-2026, Infineon Technologies AG, or an affiliate of Infineon
 # Technologies AG. All rights reserved.
+#
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,33 +24,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ################################################################################
+
 ifeq ($(WHICHFILE),true)
 $(info Processing $(lastword $(MAKEFILE_LIST)))
 endif
 
-ifndef DEVICE_MODE
-# SECURE/NON_SECURE mode is provided by VCORE_ATTRS instead of DEVICE_MODE
-DEVICE_MODE=$(VCORE_ATTRS)
-endif
-
 ################################################################################
-# Validate build
+# Secure build
 ################################################################################
 ifeq ($(DEVICE_MODE),SECURE)
-# This library is for non-secure project only
-ifneq ($(filter build_proj,$(MAKECMDGOALS)),)
-$(error Please use ifx-tf-m library instead of ifx-tf-m-ns for secure project)
-else
-$(warning Please use ifx-tf-m library instead of ifx-tf-m-ns for secure project)
-endif
-endif
-
+# Platform
+TFM_CONFIGURE_OPTIONS+= -DTFM_PLATFORM:STRING=infineon/psc3p8
+else # ($(DEVICE_MODE),SECURE)
 ################################################################################
 # Non-secure build
 ################################################################################
-# TF-M non-secure Makefile
-IFX_TFM_NS_MK:=$(abspath $(join $(dir $(lastword $(MAKEFILE_LIST))),/make/tfm_ns.mk))
-ifeq ($(wildcard $(IFX_TFM_NS_MK)),)
-$(error Required makefile not found: $(IFX_TFM_NS_MK))
-endif
-include $(IFX_TFM_NS_MK)
+
+# CM33 only - thus use TZ interface
+IFX_NS_INTERFACE_TZ=1
+
+endif # ($(DEVICE_MODE),SECURE)
